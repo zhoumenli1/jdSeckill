@@ -59,8 +59,7 @@ def send_wechat(message, title="抢购结果"):
     payload = {"text": title, "desc": message}
     headers = {'User-Agent': config.DEFAULT_USER_AGENT}
     requests.get(url, params=payload, headers=headers)
-    logging.info("Send wechat ！")
-    logging.info("hhhhhh")
+    logging.info("已发送抢购消息到微信！")
 
 
 def get_seckill_result_by_log():

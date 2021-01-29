@@ -14,13 +14,14 @@ fp = ""
 payment_pwd = ''
 
 # server 酱推送服务 ==> http://sc.ftqq.com/3.version
-sckey = ""
+sckey = "SCU141085T64a491f70424366cc47ee4215d1725185feb1371e1a3e"
 
 ######################################################################################
 
 DEFAULT_USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) " \
                      "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 " \
                      "Safari/537.36"
+
 HEADERS = {
     "User-Agent": DEFAULT_USER_AGENT,
     "Accept": "text/html,application/xhtml+xml,application/xml;"

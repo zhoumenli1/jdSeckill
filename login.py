@@ -146,6 +146,7 @@ class JdQrcodeLogin(JdSession):
             r.raise_for_status()
             if r.status_code != requests.codes.OK:
                 # 如果登录失败会重定向到登录页面 3xx
+                logging.debug(f"当前未登录({r.status_code})")
                 return False
         except requests.HTTPError:
             logging.error(f"登录失败({r.status_code})：{r.text}")
@@ -178,7 +179,7 @@ class JdQrcodeLogin(JdSession):
                 cookies_file = f"{path.abs_path_str()}/{filename}"
                 break
         if cookies_file is None:
-            logging.info("目前暂无缓存 cookies 文件")
+            logging.debug("目前暂无缓存 cookies 文件")
             return
         try:
             logging.debug(f"cookies file ==> {cookies_file}")

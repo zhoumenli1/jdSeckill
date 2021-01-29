@@ -22,6 +22,7 @@ class JdSecKill(JdQrcodeLogin):
         self.seckill_num = 2
 
     def check_login(self):
+        logging.debug(f"当前登录状态：{self.is_login}")
         if self.is_login is False:
             logging.info("当前未登录，请先进行登录！")
             self.login()
@@ -111,9 +112,9 @@ class JdSecKill(JdQrcodeLogin):
             logging.info("订单信息初始化成功")
             logging.debug(f"订单信息初始化成功 ==> {result}")
         except Exception as e:
-            logging.info("订单信息初始化失败")
+            logging.info("订单信息初始化失败：The return is not as expected, need to json.")
             logging.debug(f"订单信息初始化失败[{e}] ==> {r.text}")
-            raise SecKillException(f" The return is not as expected, need to json.")
+            raise SecKillException(f"//(ㄒoㄒ)// 流泪中...")
         return result
 
     def __get_seckill_order_data(self):
@@ -204,7 +205,7 @@ class JdSecKill(JdQrcodeLogin):
     def reserve(self):
         """发起预约
         """
-        self.check_login()
+        # self.check_login()
 
         url = 'https://yushou.jd.com/youshouinfo.action?'
         payload = {
@@ -224,7 +225,10 @@ class JdSecKill(JdQrcodeLogin):
             logging.info(f"预约成功：{r.url}")
             logging.info("预约成功，已获得抢购资格 / 您已成功预约过了，无需重复预约")
         except Exception as e:
-            raise SecKillException(f"预约失败 ==> {r.text}")
+            # fetchJSON({"error":"pss info is null"})
+            logging.error(f"预约失败({e}) ==> 当前无法预约！")
+            logging.debug(f"预约失败返回值 ==> {r.text}")
+            # raise SecKillException(f"预约失败 ==> {r.text}")
 
     def seckill(self):
         """发起抢购
@@ -256,10 +260,15 @@ class JdSecKill(JdQrcodeLogin):
         # 1. 登录检测
         self.check_login()
 
-        # 2. 抢购时间检测
+        # 2. 进行预约
+        # 将预约放到这里面，可以仅做一次登录判断
+        # 如果仅预约，那就单独调用，记得将 reserve() 内的 check_login() 取消注释
+        self.reserve()
+
+        # 3. 抢购时间检测
         self.timer.start()
 
-        # 3. 多进程抢购
+        # 4. 多进程抢购
         with ProcessPoolExecutor(work_count) as pool:
             for i in range(work_count):
                 pool.submit(self.seckill)
